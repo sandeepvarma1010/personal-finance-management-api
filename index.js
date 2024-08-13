@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const connectDB = require('./db');
 const bcrypt = require('bcryptjs');
@@ -60,10 +61,15 @@ app.post('/login', async (req, res) => {
             }
         };
 
-        jwt.sign(payload, 'yourSecretToken', { expiresIn: 3600 }, (err, token) => {
-            if (err) throw err;
-            res.json({ token });
-        });
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET,  // Use the environment variable
+            { expiresIn: 3600 },
+            (err, token) => {
+                if (err) throw err;
+                res.json({ token });
+            }
+        );
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
